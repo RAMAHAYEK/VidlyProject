@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VidlyProject.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace VidlyProject.Controllers
 {
@@ -151,8 +152,19 @@ namespace VidlyProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    DrivingLicense = model.DrivingLisence };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                #region some code we may need 
+                ////TEMP CODE 
+                //var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
+                //var roleManager = new RoleManager<IdentityRole>(roleStore);
+                //await roleManager.CreateAsync(new IdentityRole("CanManageMovies"));
+                //await UserManager.AddToRoleAsync(user.Id , "CanManageMovies");
+                #endregion
+
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
